@@ -13,54 +13,25 @@ const footerLinksDirective = {
   },
   run(data) {
     const footerLinks = JSON.parse(readFileSync(data.options.file, 'utf-8'));
-    const footerArray = new Array(...Object.entries(footerLinks));
-    const linksGrid = footerArray.map(([text, url]) => ({
-          type: 'mystDirective',
-          name: 'grid-item',
-          children: [
-            {
-              type: 'link',
-              url: url,
-              children: [
-                 {
-                   type: 'text',
-                   value: text
-                 }
-              ]
-            }
-          ]
-        }
-    ));
-    const links = footerArray.map(([text, url]) => ({
-      type: 'listItem',
-      spread: true,
+    // Plugin output is final AST: nested `mystDirective` nodes are not
+    // re-parsed, so emit `grid-item` nodes directly.
+    return Object.entries(footerLinks).map(([text, url]) => ({
+      type: 'grid-item',
       children: [
         {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'link',
-              url: url,
-              children: [
-                 {
-                   type: 'text',
-                   value: text
-                 }
-              ]
-            }
-          ]
-        }
-      ]
+          type: 'link',
+          url: url,
+          children: [{ type: 'text', value: text }],
+        },
+      ],
     }));
-    return linksGrid;
   },
 };
 
-
 /** @type {import('myst-common').MystPlugin} */
 const plugin = {
-    name: 'Footer Links',
-    directives: [footerLinksDirective],
+  name: 'Footer Links',
+  directives: [footerLinksDirective],
 };
 
 export default plugin;
