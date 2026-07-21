@@ -46,10 +46,16 @@ main {
     }
   }
 
-.footer-links > a {
-    color: white;
-    text-decoration-color: white;
-}
+  & .footer-links {
+    /* Overrides the theme's hardcoded `gap-4` utility class; this file loads
+     * after the theme bundle, so these rules win. */
+    gap: 0.5rem 1rem;
+
+    & a {
+      color: white;
+      text-decoration-color: white;
+    }
+  }
 
   @media (max-width: 640px) {
     & .outer-grid {
