@@ -67,8 +67,12 @@ main {
     font-weight: bold;
   }
   & .footer-links {
-    column-gap: 1.5rem !important;
-    line-height: normal !important;
+    /* Overrides the theme's hardcoded `gap-4` utility class and the
+     * `line-height` inherited from `.article`: this file loads after the
+     * theme bundle and `.footer .footer-links` outranks a single utility
+     * class, so no `!important` is needed. */
+    column-gap: 1.5rem;
+    line-height: normal;
 
     & a {
       color: white;
@@ -80,8 +84,8 @@ main {
   }
 
   & .footer-icons {
-    column-gap: 3rem !important;
-    row-gap: 1rem !important;
+    column-gap: 3rem;
+    row-gap: 1rem;
 
     & img {
       filter: invert(100%);
