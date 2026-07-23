@@ -13,25 +13,23 @@ const footerLinksDirective = {
   },
   run(data) {
     const footerLinks = JSON.parse(readFileSync(data.options.file, 'utf-8'));
-    const footerArray = new Array(...Object.entries(footerLinks["links"]));
-    const linksGrid = footerArray.map(([text, url]) => ({
-          type: 'mystDirective',
-          name: 'grid-item',
+    // Plugin output is final AST: nested `mystDirective` nodes are never
+    // re-parsed, so emit `grid-item` nodes directly.
+    return Object.entries(footerLinks["links"]).map(([text, url]) => ({
+      type: 'grid-item',
+      children: [
+        {
+          type: 'link',
+          url: url,
           children: [
             {
-              type: 'link',
-              url: url,
-              children: [
-                 {
-                   type: 'text',
-                   value: text
-                 }
-              ]
-            }
-          ]
-        }
-    ));
-    return linksGrid;
+              type: 'text',
+              value: text,
+            },
+          ],
+        },
+      ],
+    }));
   },
 };
 
@@ -48,26 +46,22 @@ const footerIconsDirective = {
   },
   run(data) {
     const footerIcons = JSON.parse(readFileSync(data.options.file, 'utf-8'));
-    const footerArray = new Array(...Object.entries(footerIcons["icons"]));
-    const IconsGrid = footerArray.map(([text, url]) => ({
-          type: 'mystDirective',
-          name: 'grid-item',
+    return Object.entries(footerIcons["icons"]).map(([text, url]) => ({
+      type: 'grid-item',
+      children: [
+        {
+          type: 'link',
+          url: url,
           children: [
             {
-              type: 'link',
-              url: url,
-              children: [
-                 {
-                   type: 'image',
-                   url: `/assets/icons/${text}.svg`,
-                   alt: text
-                 }
-              ]
-            }
-          ]
-        }
-    ));
-    return IconsGrid;
+              type: 'image',
+              url: `/assets/icons/${text}.svg`,
+              alt: text,
+            },
+          ],
+        },
+      ],
+    }));
   },
 };
 
